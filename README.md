@@ -1,5 +1,19 @@
-# MyPong - https://github.com/jucimarjr/mypong
-# pong em turtle python https://docs.python.org/3.3/library/turtle.html
-# baseado em http://christianthompson.com/node/51
-# fonte Press Start 2P https://www.fontspace.com/codeman38/press-start-2p
-# som pontuação https://freesound.org/people/Kodack/sounds/258020/
+# MyPong 
+MyPong Game made with Python and Turtle
+Forked from jucimarjr
+
+# Developers
+Gabriel Sena San Martin
+gssm.snf19@uea.edu.br
+
+Helder Melik Schramm
+hms.snf19@uea.edu.br
+
+Gonzalo Ivan dos Santos Portales
+gidsp.snf19@uea.edu.br
+
+João Vítor de Souza Câmara
+jvdsc.snf19@uea.edu.br
+
+Gabriel Alexander Farias de Lima Teixeira
+gafdlt.snf19@uea.edu.br
