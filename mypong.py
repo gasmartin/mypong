@@ -2,14 +2,14 @@
 # pong em turtle python https://docs.python.org/3.3/library/turtle.html
 # baseado em http://christianthompson.com/node/51
 # fonte Press Start 2P https://www.fontspace.com/codeman38/press-start-2p
-# som pontuação https://freesound.org/people/Kodack/sounds/258020/
+# som pontuacao https://freesound.org/people/Kodack/sounds/258020/
 
 import os
 import turtle
 
 playing = True
 
-# Função para criar a janela (screen)
+# Funcao para criar a janela (screen)
 def create_screen(title, width, height):
     screen = turtle.Screen()
     screen.title(title)
@@ -18,13 +18,13 @@ def create_screen(title, width, height):
     screen.tracer(0)
     return screen
 
-# Função que é chamada ao fechar a janela
+# Funcao que e chamada ao fechar a janela
 # Usada para finalizar o game loop
 def close_screen():
     global playing
     playing = not playing
 
-# Função para criar o turtle das raquetes
+# Funcao para criar o turtle das raquetes
 def create_paddle(x, y, width, height, color):
     paddle = turtle.Turtle()
     paddle.speed(0)
@@ -35,7 +35,7 @@ def create_paddle(x, y, width, height, color):
     paddle.goto(x, y)
     return paddle
 
-# Função para criar o turtle da bola
+# Funcao para criar o turtle da bola
 def create_ball(x, y, color):
     ball = turtle.Turtle()
     ball.speed(0)
@@ -118,23 +118,23 @@ screen.onkeypress(paddle_2_up,"Up")
 screen.onkeypress(paddle_2_down,"Down")
 
 while playing:
-    # movimentação da bola
+    # movimentacao da bola
     ball.setx(ball.xcor() + ball.dx)
     ball.sety(ball.ycor() + ball.dy)
 
-    #colisão com parede superior
+    #colisao com parede superior
     if ball.ycor() > 290:
         # os.system("afplay bounce.wav&")
         ball.sety(290)
         ball.dy *= -1
     
-    #colisão com parede inferior
+    #colisao com parede inferior
     if ball.ycor() < -280:
         # os.system("afplay bounce.wav&")
         ball.sety(-280)
         ball.dy *= -1
 
-    #colisão com parede esquerda
+    #colisao com parede esquerda
     if ball.xcor() < -390:
         right_player_score += 1
         hud.clear()
@@ -142,8 +142,9 @@ while playing:
         # os.system("afplay 258020__kodack__arcade-bleep-sound.wav&")
         ball.goto(0,0)
         ball.dx *= -1
+        ball.dy *= -1
     
-    #colisão com parede direita
+    #colisao com parede direita
     if ball.xcor() > 390:
         left_player_score += 1
         hud.clear()
@@ -151,16 +152,26 @@ while playing:
         # os.system("afplay 258020__kodack__arcade-bleep-sound.wav&")
         ball.goto(0,0)
         ball.dx *= -1
+        ball.dy *= -1
 
 
-    # colisão com raquete 1
-    if ball.xcor() < -330 and ball.ycor() < paddle_1.ycor() + 50 and ball.ycor() > paddle_1.ycor() - 50:
+    # colisao com raquete 1
+    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() - 10 < paddle_1.ycor() + 50 and ball.ycor() + 10 > paddle_1.ycor() - 50:
         ball.dx *= -1     
-        # os.system("afplay bounce.wav&")   
+        # os.system("afplay bounce.wav&")
+    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() - 60 == paddle_1.ycor():
+        ball.dy *= -1
+    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() + 60 == paddle_1.ycor():
+        ball.dy *= -1
+           
     
-    # colisão com raquete 2
-    if ball.xcor() > 330 and ball.ycor() < paddle_2.ycor() + 50 and ball.ycor() > paddle_2.ycor() - 50:
+    # colisao com raquete 2
+    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() - 10 < paddle_2.ycor() + 50 and ball.ycor() + 10 > paddle_2.ycor() - 50:
         ball.dx *= -1
         # os.system("afplay bounce.wav&")
+    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() - 60 == paddle_2.ycor():
+        ball.dy *= -1
+    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() + 60 == paddle_2.ycor():
+        ball.dy *= -1
 
     screen.update()
