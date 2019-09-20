@@ -66,8 +66,8 @@ paddle_2 = create_paddle(350, 0, 5, 1, "blue")
 
 ball = create_ball(0, 0, "white")
 
-north_wall = create_paddle(0, 300, 0.5, 40, "red")
-south_wall = create_paddle(0, -295, 0.5, 40, "red")
+north_wall = create_paddle(0, 300, 0.5, 40, "black")
+south_wall = create_paddle(0, -295, 0.5, 40, "black")
 left_wall = create_paddle(-400, 0, 30, 0.5, "red")
 right_wall = create_paddle(395, 0, 30, 0.5, "red")
 
@@ -123,19 +123,19 @@ while playing:
     ball.sety(ball.ycor() + ball.dy)
 
     #colisao com parede superior
-    if ball.ycor() > 290:
+    if ball.ycor() + 15 > north_wall.ycor():
         # os.system("afplay bounce.wav&")
-        ball.sety(290)
+        # ball.sety(north_wall.ycor() - 20)
         ball.dy *= -1
     
     #colisao com parede inferior
-    if ball.ycor() < -280:
+    if ball.ycor() - 15 < south_wall.ycor():
         # os.system("afplay bounce.wav&")
-        ball.sety(-280)
+        # ball.sety(south_wall.ycor() + 20)
         ball.dy *= -1
 
     #colisao com parede esquerda
-    if ball.xcor() < -390:
+    if ball.xcor() < left_wall.xcor():
         right_player_score += 1
         hud.clear()
         hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal") )
@@ -145,7 +145,7 @@ while playing:
         ball.dy *= -1
     
     #colisao com parede direita
-    if ball.xcor() > 390:
+    if ball.xcor() > right_wall.xcor():
         left_player_score += 1
         hud.clear()
         hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal") )
