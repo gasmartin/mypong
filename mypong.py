@@ -5,7 +5,6 @@
 # som pontuação https://freesound.org/people/Kodack/sounds/258020/
 
 import os
-from tkinter import _default_root
 import turtle
 
 playing = True
