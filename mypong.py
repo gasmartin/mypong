@@ -80,44 +80,57 @@ hud.write("{} : {}".format(left_player_score, right_player_score), align="center
 # mover raquete 1
 def paddle_1_up():
     y = paddle_1.ycor()
-    if y < 250:
+    if y + 20 < 250:
         y += 20
-    else:
-        y = 250
     paddle_1.sety(y)
 
 def paddle_1_down():
     y = paddle_1.ycor()
-    if y > -250:
+    if y - 20 > -250:
         y += -20
-    else:
-        y = -250
     paddle_1.sety(y)
 
 def paddle_2_up():
     y = paddle_2.ycor()
-    if y < 250:
+    if y + 20 < 250:
         y += 20
-    else:
-        y = 250
     paddle_2.sety(y)
 
 def paddle_2_down():
     y = paddle_2.ycor()
-    if y > -250:
+    if y - 20 > -250:
         y += -20
-    else:
-        y = -250
     paddle_2.sety(y)
 
 # mapeando as teclas
 screen.listen()
-screen.onkeypress(paddle_1_up,"w")
-screen.onkeypress(paddle_1_down,"s")
-screen.onkeypress(paddle_2_up,"Up")
-screen.onkeypress(paddle_2_down,"Down")
+screen.onkeypress(paddle_1_up, "w")
+screen.onkeypress(paddle_1_down, "s")
+screen.onkeypress(paddle_2_up, "Up")
+screen.onkeypress(paddle_2_down, "Down")
 
 while playing:
+    # colisao com raquete 1
+    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() - 10 < paddle_1.ycor() + 50 and ball.ycor() + 10 > paddle_1.ycor() - 50:
+        ball.dx *= -1     
+        # os.system("afplay bounce.wav&")
+    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() - 60 == paddle_1.ycor():
+        ball.dy *= -1
+        ball.sety(paddle_1.ycor() + 70)
+    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() + 60 == paddle_1.ycor():
+        ball.dy *= -1
+        ball.sety(paddle_1.ycor() - 70)
+           
+    
+    # colisao com raquete 2
+    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() - 10 < paddle_2.ycor() + 50 and ball.ycor() + 10 > paddle_2.ycor() - 50:
+        ball.dx *= -1
+        # os.system("afplay bounce.wav&")
+    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() - 60 == paddle_2.ycor():
+        ball.dy *= -1
+    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() + 60 == paddle_2.ycor():
+        ball.dy *= -1
+
     # movimentacao da bola
     ball.setx(ball.xcor() + ball.dx)
     ball.sety(ball.ycor() + ball.dy)
@@ -125,13 +138,11 @@ while playing:
     #colisao com parede superior
     if ball.ycor() + 15 > north_wall.ycor():
         # os.system("afplay bounce.wav&")
-        # ball.sety(north_wall.ycor() - 20)
         ball.dy *= -1
     
     #colisao com parede inferior
     if ball.ycor() - 15 < south_wall.ycor():
         # os.system("afplay bounce.wav&")
-        # ball.sety(south_wall.ycor() + 20)
         ball.dy *= -1
 
     #colisao com parede esquerda
@@ -155,23 +166,6 @@ while playing:
         ball.dy *= -1
 
 
-    # colisao com raquete 1
-    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() - 10 < paddle_1.ycor() + 50 and ball.ycor() + 10 > paddle_1.ycor() - 50:
-        ball.dx *= -1     
-        # os.system("afplay bounce.wav&")
-    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() - 60 == paddle_1.ycor():
-        ball.dy *= -1
-    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() + 60 == paddle_1.ycor():
-        ball.dy *= -1
-           
     
-    # colisao com raquete 2
-    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() - 10 < paddle_2.ycor() + 50 and ball.ycor() + 10 > paddle_2.ycor() - 50:
-        ball.dx *= -1
-        # os.system("afplay bounce.wav&")
-    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() - 60 == paddle_2.ycor():
-        ball.dy *= -1
-    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() + 60 == paddle_2.ycor():
-        ball.dy *= -1
 
     screen.update()
