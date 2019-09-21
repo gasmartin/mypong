@@ -102,6 +102,39 @@ def paddle_2_down():
         y += -20
     paddle_2.sety(y)
 
+# collider 1
+def collision_1 (bcoord, padx_1, padx_2, pady, dist):
+    if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() - bcoord < paddle_1.ycor() + pady and ball.ycor() + bcoord > paddle_1.ycor() - pady:
+        ball.dx *= -1
+    # os.system("afplay bounce.wav&")
+    if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() - dist == paddle_1.ycor():
+        ball.dy *= -1
+        # os.system("afplay bounce.wav&")
+    if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() + dist == paddle_1.ycor():
+        ball.dy *= -1
+        # os.system("afplay bounce.wav&")
+
+# collider 2
+def collision_2 (bcoord, padx_1, padx_2, pady, dist):
+    if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() - bcoord < paddle_2.ycor() + pady and ball.ycor() + bcoord > paddle_2.ycor() - pady:
+        ball.dx *= -1
+        # os.system("afplay bounce.wav&")
+    if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() - dist == paddle_2.ycor():
+        ball.dy *= -1
+        # os.system("afplay bounce.wav&")
+    if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() + dist == paddle_2.ycor():
+        ball.dy *= -1
+        # os.system("afplay bounce.wav&")
+
+# atualiza placar
+def update_score():
+    hud.clear()
+    hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal") )
+    # os.system("afplay 258020__kodack__arcade-bleep-sound.wav&")
+    ball.goto(0,0)
+    ball.dx *= -1
+    ball.dy *= -1
+   
 # mapeando as teclas
 screen.listen()
 screen.onkeypress(paddle_1_up, "w")
@@ -111,25 +144,11 @@ screen.onkeypress(paddle_2_down, "Down")
 
 while playing:
     # colisao com raquete 1
-    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() - 10 < paddle_1.ycor() + 50 and ball.ycor() + 10 > paddle_1.ycor() - 50:
-        ball.dx *= -1     
-        # os.system("afplay bounce.wav&")
-    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() - 60 == paddle_1.ycor():
-        ball.dy *= -1
-        ball.sety(paddle_1.ycor() + 70)
-    if ball.xcor() - 10 < -340 and ball.xcor() + 10 > -360 and ball.ycor() + 60 == paddle_1.ycor():
-        ball.dy *= -1
-        ball.sety(paddle_1.ycor() - 70)
-           
-    
+    collision_1(10, -340, -360, 50, 60)
+     
     # colisao com raquete 2
-    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() - 10 < paddle_2.ycor() + 50 and ball.ycor() + 10 > paddle_2.ycor() - 50:
-        ball.dx *= -1
-        # os.system("afplay bounce.wav&")
-    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() - 60 == paddle_2.ycor():
-        ball.dy *= -1
-    if ball.xcor() + 10 > 340 and ball.xcor() - 10 < 360 and ball.ycor() + 60 == paddle_2.ycor():
-        ball.dy *= -1
+    collision_2(10, 340, 360, 50, 60)
+    
 
     # movimentacao da bola
     ball.setx(ball.xcor() + ball.dx)
@@ -148,22 +167,12 @@ while playing:
     #colisao com parede esquerda
     if ball.xcor() < left_wall.xcor():
         right_player_score += 1
-        hud.clear()
-        hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal") )
-        # os.system("afplay 258020__kodack__arcade-bleep-sound.wav&")
-        ball.goto(0,0)
-        ball.dx *= -1
-        ball.dy *= -1
+        update_score()
     
     #colisao com parede direita
     if ball.xcor() > right_wall.xcor():
         left_player_score += 1
-        hud.clear()
-        hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal") )
-        # os.system("afplay 258020__kodack__arcade-bleep-sound.wav&")
-        ball.goto(0,0)
-        ball.dx *= -1
-        ball.dy *= -1
+        update_score()
 
 
     
