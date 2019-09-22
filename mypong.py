@@ -107,35 +107,35 @@ def paddle_2_down():
 def collision_1 (bcoord, padx_1, padx_2, pady, dist):
     if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() - bcoord < paddle_1.ycor() + pady and ball.ycor() + bcoord > paddle_1.ycor() - pady:
         ball.dx *= -1
-    # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() - dist == paddle_1.ycor():
         ball.dy *= -1
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() + dist == paddle_1.ycor():
         ball.dy *= -1
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
 
 # collider 2
 def collision_2 (bcoord, padx_1, padx_2, pady, dist):
     if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() - bcoord < paddle_2.ycor() + pady and ball.ycor() + bcoord > paddle_2.ycor() - pady:
         ball.dx *= -1
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() - dist == paddle_2.ycor():
         ball.dy *= -1
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() + dist == paddle_2.ycor():
         ball.dy *= -1
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
 
 # atualiza placar
 def update_score():
     hud.clear()
     hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal") )
-    # os.system("afplay 258020__kodack__arcade-bleep-sound.wav&")
+    os.system("aplay 258020__kodack__arcade-bleep-sound.wav&")
     ball.goto(0,0)
     ball.dx *= -1
     ball.dy *= -1
-   
+
 # mapeando as teclas
 screen.listen()
 screen.onkeypress(paddle_1_up, "w")
@@ -157,22 +157,24 @@ while playing:
 
     #colisao com parede superior
     if ball.ycor() + 15 > north_wall.ycor():
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
         ball.dy *= -1
     
     #colisao com parede inferior
     if ball.ycor() - 15 < south_wall.ycor():
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
         ball.dy *= -1
 
     #colisao com parede esquerda
     if ball.xcor() < left_wall.xcor():
         right_player_score += 1
         update_score()
+        os.system("aplay bounce.wav&")
     
     #colisao com parede direita
     if ball.xcor() > right_wall.xcor():
         left_player_score += 1
         update_score()
+        os.system("aplay bounce.wav&")
 
     screen.update()
