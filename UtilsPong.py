@@ -1,6 +1,6 @@
 def show_error_log():
     print("This is an error log...")
-    print("ERROR: Please enter \"python mypongplayers.py -help\" for explaining")
+    print("ERROR: Please enter \"python mypong.py -help\" for explaining")
 
 def show_help_information():
     print("Welcome to the MyPong v.2.0.0")

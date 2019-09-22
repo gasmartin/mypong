@@ -83,7 +83,6 @@ if number_of_parameters == 1:
         show_error_log()
         exit()
     
-
 screen = create_screen("My Pong", 800, 600)
 root = screen.getcanvas().winfo_toplevel()
 root.protocol("WM_DELETE_WINDOW", close_screen)

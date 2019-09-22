@@ -4,7 +4,10 @@
 # fonte Press Start 2P https://www.fontspace.com/codeman38/press-start-2p
 # som pontuacao https://freesound.org/people/Kodack/sounds/258020/
 
+from sys import argv, exit
+from UtilsPong import show_error_log, show_help_information
 import os
+from time import sleep
 import turtle
 
 playing = True
@@ -56,6 +59,30 @@ def create_hud():
     hud.hideturtle()
     hud.goto(0, 250)
     return hud
+
+# verificacao de parametros e error_showcase
+parameters = argv[1:]
+number_of_parameters = len(parameters)
+if number_of_parameters == 1:
+    arg = ""
+    try:
+        arg = argv[1]
+    except Exception:
+        show_error_log()
+        exit()
+
+    if arg == "-help":
+        show_help_information()
+        exit()
+
+    elif arg == "1" or arg == "2":
+        num_players = parameters[0]
+        num_players = int(num_players)
+
+    else:
+        show_error_log()
+        exit()
+    
 
 screen = create_screen("My Pong", 800, 600)
 root = screen.getcanvas().winfo_toplevel()
@@ -135,12 +162,18 @@ def update_score():
     ball.dx *= -1
     ball.dy *= -1
    
-# mapeando as teclas
-screen.listen()
-screen.onkeypress(paddle_1_up, "w")
-screen.onkeypress(paddle_1_down, "s")
-screen.onkeypress(paddle_2_up, "Up")
-screen.onkeypress(paddle_2_down, "Down")
+# mapeando as teclas modo 2 Players
+if (num_players == 2):
+    screen.listen()
+    screen.onkeypress(paddle_1_up, "w")
+    screen.onkeypress(paddle_1_down, "s")
+    screen.onkeypress(paddle_2_up, "Up")
+    screen.onkeypress(paddle_2_down, "Down")
+
+if (num_players == 1):
+    screen.listen()
+    screen.onkeypress(paddle_1_up, "w")
+    screen.onkeypress(paddle_1_down, "s")
 
 while playing:
     # colisao com raquete 1
@@ -153,6 +186,10 @@ while playing:
     # movimentacao da bola
     ball.setx(ball.xcor() + ball.dx)
     ball.sety(ball.ycor() + ball.dy)
+
+    # movimentacao da raquete 2 em 1 Player
+    if (num_players == 1):
+        paddle_2.sety(ball.ycor())
 
     #colisao com parede superior
     if ball.ycor() + 15 > north_wall.ycor():
