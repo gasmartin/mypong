@@ -5,6 +5,7 @@
 # som pontuacao https://freesound.org/people/Kodack/sounds/258020/
 
 import os
+from time import sleep
 import turtle
 
 playing = True
@@ -173,8 +174,5 @@ while playing:
     if ball.xcor() > right_wall.xcor():
         left_player_score += 1
         update_score()
-
-
-    
 
     screen.update()
