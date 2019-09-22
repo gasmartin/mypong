@@ -3,8 +3,10 @@
 # baseado em http://christianthompson.com/node/51
 # fonte Press Start 2P https://www.fontspace.com/codeman38/press-start-2p
 # som pontuacao https://freesound.org/people/Kodack/sounds/258020/
-
+from sys import argv, exit
+from UtilsPong import show_error_log, show_help_information
 import os
+from time import sleep
 import turtle
 
 playing = True
@@ -57,6 +59,26 @@ def create_hud():
     hud.goto(0, 250)
     return hud
 
+
+# verificacao de parametros e error_showcase
+parameters = argv[1:]
+number_of_parameters = len(parameters)
+if number_of_parameters == 1:
+    arg = ""
+    try:
+        num_players = argv[0]
+        num_players = int(num_players)
+
+    except Exception:
+        show_error_log()
+        exit()
+
+    if arg == "-help":
+        show_help_information()
+    else:
+        show_error_log()
+        exit()
+
 screen = create_screen("My Pong", 800, 600)
 root = screen.getcanvas().winfo_toplevel()
 root.protocol("WM_DELETE_WINDOW", close_screen)
@@ -106,41 +128,47 @@ def paddle_2_down():
 def collision_1 (bcoord, padx_1, padx_2, pady, dist):
     if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() - bcoord < paddle_1.ycor() + pady and ball.ycor() + bcoord > paddle_1.ycor() - pady:
         ball.dx *= -1
-    # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() - dist == paddle_1.ycor():
         ball.dy *= -1
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() + dist == paddle_1.ycor():
         ball.dy *= -1
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
 
 # collider 2
 def collision_2 (bcoord, padx_1, padx_2, pady, dist):
     if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() - bcoord < paddle_2.ycor() + pady and ball.ycor() + bcoord > paddle_2.ycor() - pady:
         ball.dx *= -1
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() - dist == paddle_2.ycor():
         ball.dy *= -1
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() + dist == paddle_2.ycor():
         ball.dy *= -1
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
 
 # atualiza placar
 def update_score():
     hud.clear()
     hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal") )
-    # os.system("afplay 258020__kodack__arcade-bleep-sound.wav&")
+    os.system("aplay 258020__kodack__arcade-bleep-sound.wav&")
     ball.goto(0,0)
     ball.dx *= -1
     ball.dy *= -1
-   
-# mapeando as teclas
-screen.listen()
-screen.onkeypress(paddle_1_up, "w")
-screen.onkeypress(paddle_1_down, "s")
-screen.onkeypress(paddle_2_up, "Up")
-screen.onkeypress(paddle_2_down, "Down")
+
+# mapeando as teclas modo 2 Players
+if (num_players == 2):
+    screen.listen()
+    screen.onkeypress(paddle_1_up, "w")
+    screen.onkeypress(paddle_1_down, "s")
+    screen.onkeypress(paddle_2_up, "Up")
+    screen.onkeypress(paddle_2_down, "Down")
+
+if (num_players == 1):
+    screen.listen()
+    screen.onkeypress(paddle_1_up, "w")
+    screen.onkeypress(paddle_1_down, "s")
 
 while playing:
     # colisao com raquete 1
@@ -154,27 +182,30 @@ while playing:
     ball.setx(ball.xcor() + ball.dx)
     ball.sety(ball.ycor() + ball.dy)
 
+    # movimentacao da raquete 2 em 1 Player
+    if (num_players == 1):
+        paddle_2.sety(ball.ycor())
+
     #colisao com parede superior
     if ball.ycor() + 15 > north_wall.ycor():
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
         ball.dy *= -1
     
     #colisao com parede inferior
     if ball.ycor() - 15 < south_wall.ycor():
-        # os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
         ball.dy *= -1
 
     #colisao com parede esquerda
     if ball.xcor() < left_wall.xcor():
         right_player_score += 1
         update_score()
+        os.system("aplay bounce.wav&")
     
     #colisao com parede direita
     if ball.xcor() > right_wall.xcor():
         left_player_score += 1
         update_score()
-
-
-    
+        os.system("aplay bounce.wav&")
 
     screen.update()
