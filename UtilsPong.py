@@ -7,7 +7,7 @@ def show_help_information():
     print()
     print("To use MyPong, you should enter like this:")
     print()
-    print("    python mypong.py <The player mode you want to play, being -1 or -2 for 1 player or 2 player respectively>")
+    print("    python3 mypong.py <The player mode you want to play, being 1 or 2 for 1 player or 2 player respectively>")
     print()
     print("Developers:")
     print("    Gabriel Sena San Martin, Gabriel Alexander Farias, Gonzalo Ivan Santos Portales")
