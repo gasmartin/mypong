@@ -66,18 +66,23 @@ number_of_parameters = len(parameters)
 if number_of_parameters == 1:
     arg = ""
     try:
-        num_players = argv[0]
-        num_players = int(num_players)
-
+        arg = argv[1]
     except Exception:
         show_error_log()
         exit()
 
     if arg == "-help":
         show_help_information()
+        exit()
+
+    elif arg == "1" or arg == "2":
+        num_players = parameters[0]
+        num_players = int(num_players)
+
     else:
         show_error_log()
         exit()
+    
 
 screen = create_screen("My Pong", 800, 600)
 root = screen.getcanvas().winfo_toplevel()
