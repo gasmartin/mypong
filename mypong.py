@@ -132,29 +132,29 @@ def paddle_2_down():
 def collider_pads (t1, t2):
     if t1.xcor() - 10 < -340 and t1.xcor() + 10 > -360 and t1.ycor() - 10 < t2.ycor() + 50 and t1.ycor() + 10 > t2.ycor() - 50:
         t1.dx *= -1
-        #os.system("aplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if t1.xcor() - 10 < -340 and t1.xcor() + 10 > -360 and t1.ycor() - 60 == t2.ycor():
         t1.dy *= -1
-        #os.system("aplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if t1.xcor() - 10 < -340 and t1.xcor() + 10 > -360 and t1.ycor() + 60 == t2.ycor():
         t1.dy *= -1
-        #os.system("aplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if t1.xcor() + 10 > 340 and t1.xcor() - 10 < 360 and t1.ycor() - 10 < t2.ycor() + 50 and t1.ycor() + 10 > t2.ycor() - 50:
         t1.dx *= -1
-        #os.system("aplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if t1.xcor() + 10 > 340 and t1.xcor() - 10 < 360 and t1.ycor() - 60 == t2.ycor():
         t1.dy *= -1
-        #os.system("aplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     if t1.xcor() + 10 > 340 and t1.xcor() - 10 < 360 and t1.ycor() + 60 == t2.ycor():
         t1.dy *= -1
-        #os.system("aplay bounce.wav&")
+        os.system("aplay bounce.wav&")
     
 def collider_walls (t1,t2):
     if t2.ycor() > 295 and t1.ycor() + 15 > t2.ycor():
-        # os.system("afplay bounce.wav&")
+        os.system("afplay bounce.wav&")
         t1.dy *= -1
     if t2.ycor() < -280 and t1.ycor() - 15 < t2.ycor():
-        # os.system("afplay bounce.wav&")
+        os.system("afplay bounce.wav&")
         t1.dy *= -1
     
 
@@ -169,7 +169,6 @@ def update_score():
     ball.dy *= -1
    
 # mapeando as teclas modo 2 Players
-num_players = 2
 if (num_players == 2):
     screen.listen()
     screen.onkeypress(paddle_1_up, "w")
