@@ -129,29 +129,35 @@ def paddle_2_down():
         y += -20
     paddle_2.sety(y)
 
-# collider 1
-def collision_1 (bcoord, padx_1, padx_2, pady, dist):
-    if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() - bcoord < paddle_1.ycor() + pady and ball.ycor() + bcoord > paddle_1.ycor() - pady:
-        ball.dx *= -1
-        os.system("aplay bounce.wav&")
-    if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() - dist == paddle_1.ycor():
-        ball.dy *= -1
-        os.system("aplay bounce.wav&")
-    if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() + dist == paddle_1.ycor():
-        ball.dy *= -1
-        os.system("aplay bounce.wav&")
+def collider_pads (t1, t2):
+    if t1.xcor() - 10 < -340 and t1.xcor() + 10 > -360 and t1.ycor() - 10 < t2.ycor() + 50 and t1.ycor() + 10 > t2.ycor() - 50:
+        t1.dx *= -1
+        #os.system("aplay bounce.wav&")
+    if t1.xcor() - 10 < -340 and t1.xcor() + 10 > -360 and t1.ycor() - 60 == t2.ycor():
+        t1.dy *= -1
+        #os.system("aplay bounce.wav&")
+    if t1.xcor() - 10 < -340 and t1.xcor() + 10 > -360 and t1.ycor() + 60 == t2.ycor():
+        t1.dy *= -1
+        #os.system("aplay bounce.wav&")
+    if t1.xcor() + 10 > 340 and t1.xcor() - 10 < 360 and t1.ycor() - 10 < t2.ycor() + 50 and t1.ycor() + 10 > t2.ycor() - 50:
+        t1.dx *= -1
+        #os.system("aplay bounce.wav&")
+    if t1.xcor() + 10 > 340 and t1.xcor() - 10 < 360 and t1.ycor() - 60 == t2.ycor():
+        t1.dy *= -1
+        #os.system("aplay bounce.wav&")
+    if t1.xcor() + 10 > 340 and t1.xcor() - 10 < 360 and t1.ycor() + 60 == t2.ycor():
+        t1.dy *= -1
+        #os.system("aplay bounce.wav&")
+    
+def collider_walls (t1,t2):
+    if t2.ycor() > 295 and t1.ycor() + 15 > t2.ycor():
+        # os.system("afplay bounce.wav&")
+        t1.dy *= -1
+    if t2.ycor() < -280 and t1.ycor() - 15 < t2.ycor():
+        # os.system("afplay bounce.wav&")
+        t1.dy *= -1
+    
 
-# collider 2
-def collision_2 (bcoord, padx_1, padx_2, pady, dist):
-    if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() - bcoord < paddle_2.ycor() + pady and ball.ycor() + bcoord > paddle_2.ycor() - pady:
-        ball.dx *= -1
-        os.system("aplay bounce.wav&")
-    if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() - dist == paddle_2.ycor():
-        ball.dy *= -1
-        os.system("aplay bounce.wav&")
-    if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() + dist == paddle_2.ycor():
-        ball.dy *= -1
-        os.system("aplay bounce.wav&")
 
 # atualiza placar
 def update_score():
@@ -163,6 +169,7 @@ def update_score():
     ball.dy *= -1
    
 # mapeando as teclas modo 2 Players
+num_players = 2
 if (num_players == 2):
     screen.listen()
     screen.onkeypress(paddle_1_up, "w")
@@ -177,10 +184,10 @@ if (num_players == 1):
 
 while playing:
     # colisao com raquete 1
-    collision_1(10, -340, -360, 50, 60)
+    collider_pads(ball, paddle_1)
      
     # colisao com raquete 2
-    collision_2(10, 340, 360, 50, 60)
+    collider_pads(ball, paddle_2)
     
 
     # movimentacao da bola
@@ -192,14 +199,10 @@ while playing:
         paddle_2.sety(ball.ycor())
 
     #colisao com parede superior
-    if ball.ycor() + 15 > north_wall.ycor():
-        # os.system("afplay bounce.wav&")
-        ball.dy *= -1
+    collider_walls(ball, north_wall)
     
     #colisao com parede inferior
-    if ball.ycor() - 15 < south_wall.ycor():
-        # os.system("afplay bounce.wav&")
-        ball.dy *= -1
+    collider_walls(ball, south_wall)
 
     #colisao com parede esquerda
     if ball.xcor() < left_wall.xcor():
