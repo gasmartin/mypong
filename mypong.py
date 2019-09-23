@@ -83,7 +83,6 @@ if number_of_parameters == 1:
         show_error_log()
         exit()
     
-
 screen = create_screen("My Pong", 800, 600)
 root = screen.getcanvas().winfo_toplevel()
 root.protocol("WM_DELETE_WINDOW", close_screen)
@@ -129,24 +128,28 @@ def paddle_2_down():
         y += -20
     paddle_2.sety(y)
 
-def collider_pads (t1, t2):
-    if t1.xcor() - 10 < -340 and t1.xcor() + 10 > -360 and t1.ycor() - 10 < t2.ycor() + 50 and t1.ycor() + 10 > t2.ycor() - 50:
-        t1.dx *= -1
+# collider 1
+def collision_1 (bcoord, padx_1, padx_2, pady, dist):
+    if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() - bcoord < paddle_1.ycor() + pady and ball.ycor() + bcoord > paddle_1.ycor() - pady:
+        ball.dx *= -1
         os.system("aplay bounce.wav&")
-    if t1.xcor() - 10 < -340 and t1.xcor() + 10 > -360 and t1.ycor() - 60 == t2.ycor():
-        t1.dy *= -1
+    if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() - dist == paddle_1.ycor():
+        ball.dy *= -1
         os.system("aplay bounce.wav&")
-    if t1.xcor() - 10 < -340 and t1.xcor() + 10 > -360 and t1.ycor() + 60 == t2.ycor():
-        t1.dy *= -1
+    if ball.xcor() - bcoord < padx_1 and ball.xcor() + bcoord > padx_2 and ball.ycor() + dist == paddle_1.ycor():
+        ball.dy *= -1
         os.system("aplay bounce.wav&")
-    if t1.xcor() + 10 > 340 and t1.xcor() - 10 < 360 and t1.ycor() - 10 < t2.ycor() + 50 and t1.ycor() + 10 > t2.ycor() - 50:
-        t1.dx *= -1
+
+# collider 2
+def collision_2 (bcoord, padx_1, padx_2, pady, dist):
+    if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() - bcoord < paddle_2.ycor() + pady and ball.ycor() + bcoord > paddle_2.ycor() - pady:
+        ball.dx *= -1
         os.system("aplay bounce.wav&")
-    if t1.xcor() + 10 > 340 and t1.xcor() - 10 < 360 and t1.ycor() - 60 == t2.ycor():
-        t1.dy *= -1
+    if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() - dist == paddle_2.ycor():
+        ball.dy *= -1
         os.system("aplay bounce.wav&")
-    if t1.xcor() + 10 > 340 and t1.xcor() - 10 < 360 and t1.ycor() + 60 == t2.ycor():
-        t1.dy *= -1
+    if ball.xcor() + bcoord > padx_1 and ball.xcor() - bcoord < padx_2 and ball.ycor() + dist == paddle_2.ycor():
+        ball.dy *= -1
         os.system("aplay bounce.wav&")
     
 def collider_walls (t1,t2):
@@ -156,8 +159,6 @@ def collider_walls (t1,t2):
     if t2.ycor() < -280 and t1.ycor() - 15 < t2.ycor():
         os.system("afplay bounce.wav&")
         t1.dy *= -1
-    
-
 
 # atualiza placar
 def update_score():
@@ -167,6 +168,12 @@ def update_score():
     ball.goto(0,0)
     ball.dx *= -1
     ball.dy *= -1
+
+ # Mensagem final se um dos jogadores conseguir 5 pontos   
+ # ainda tem que ajeitar pq tá uma merda
+def winner_hud(winner):
+    hud.write("{} is the winner!".format(winner), align="center", font=("Press Start 2P",40,"normal"))
+    sleep(5)
    
 # mapeando as teclas modo 2 Players
 if (num_players == 2):
@@ -183,11 +190,10 @@ if (num_players == 1):
 
 while playing:
     # colisao com raquete 1
-    collider_pads(ball, paddle_1)
+    collision_1(10, -340, -360, 50, 60)
      
     # colisao com raquete 2
-    collider_pads(ball, paddle_2)
-    
+    collision_2(10, 340, 360, 50, 60)
 
     # movimentacao da bola
     ball.setx(ball.xcor() + ball.dx)
@@ -197,23 +203,26 @@ while playing:
     if (num_players == 1):
         paddle_2.sety(ball.ycor())
 
-    #colisao com parede superior
+    # colisao com parede superior
     collider_walls(ball, north_wall)
     
-    #colisao com parede inferior
+    # colisao com parede inferior
     collider_walls(ball, south_wall)
 
-    #colisao com parede esquerda
+    # colisao com parede esquerda
     if ball.xcor() < left_wall.xcor():
         right_player_score += 1
         update_score()
     
-    #colisao com parede direita
+    # colisao com parede direita
     if ball.xcor() > right_wall.xcor():
         left_player_score += 1
         update_score()
 
-
+    # testa se um dos jogadores já conseguiu atingir 5 pontos
+    if left_player_score == 5 or right_player_score == 5:
+        winner = "Player 1" if left_player_score == 5 else "Player 2"
+        winner_hud(winner)
+        playing = False
     
-
     screen.update()
