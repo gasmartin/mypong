@@ -63,6 +63,7 @@ def create_hud():
 # verificacao de parametros e error_showcase
 parameters = argv[1:]
 number_of_parameters = len(parameters)
+num_players = 2
 if number_of_parameters == 1:
     arg = ""
     try:
@@ -75,9 +76,8 @@ if number_of_parameters == 1:
         show_help_information()
         exit()
 
-    elif arg == "1" or arg == "2":
-        num_players = parameters[0]
-        num_players = int(num_players)
+    elif arg == "-1":
+        num_players = 1
 
     else:
         show_error_log()
@@ -154,10 +154,10 @@ def collision_2 (bcoord, padx_1, padx_2, pady, dist):
     
 def collider_walls (t1,t2):
     if t2.ycor() > 295 and t1.ycor() + 15 > t2.ycor():
-        os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
         t1.dy *= -1
     if t2.ycor() < -280 and t1.ycor() - 15 < t2.ycor():
-        os.system("afplay bounce.wav&")
+        os.system("aplay bounce.wav&")
         t1.dy *= -1
 
 # atualiza placar
