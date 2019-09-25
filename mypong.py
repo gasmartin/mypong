@@ -11,7 +11,6 @@ from time import sleep
 import turtle
 
 playing = True
-hasWinner = False
 
 # Funcao para criar a janela (screen)
 def create_screen(title, width, height):
@@ -86,28 +85,13 @@ def paddle_2_down():
         y += -20
     paddle_2.sety(y)
 
-'''
-    ANGULO
-    if abs(by - py) < 10:
-        ball.dy = 0
-    elif abs(by - py) < 20:
-        ball.dy = ball.dx if by > py else ball.dx * -1
-    elif abs(by - py) < 30:
-        ball.dy = ball.dx + 0.8 if by > py else (ball.dx + 0.8) * -1
-    elif abs(by - py) < 40:
-        ball.dy = ball.dx + 0.4 if by > py else (ball.dx + 0.4) * -1
-    else:
-        ball.dy = ball.dx + 0.2 if by > py else (ball.dx + 0.2) * -1
-
-    SOM
-'''
-
 def collision_1(paddle, ball):
     px, py = paddle.xcor(), paddle.ycor()
     bx, by = ball.xcor(), ball.ycor()
 
-    if by + 10 <= py + 50 and by - 10 >= py - 50 and bx - 10 <= px + 10:
+    if by - 10 <= py + 50 and by + 10 >= py - 50 and bx - 10 <= px + 10 and bx + 10 >= px - 10:
         ball.dx *= -1
+        ball.dx += 0.2 if ball.dx > 0 else -0.2
         if abs(by - py) < 10:
             ball.dy = 0
         elif abs(by - py) < 20:
@@ -130,18 +114,19 @@ def collision_2(paddle, ball):
     px, py = paddle.xcor(), paddle.ycor()
     bx, by = ball.xcor(), ball.ycor()
 
-    if by + 10 <= py + 50 and by - 10 >= py - 50 and bx + 10 >= px - 10:
+    if by - 10 <= py + 50 and by + 10 >= py - 50 and bx + 10 >= px - 10 and bx - 10 <= px + 10:
         ball.dx *= -1
+        ball.dx += 0.2 if ball.dx > 0 else -0.2
         if abs(by - py) < 10:
             ball.dy = 0
         elif abs(by - py) < 20:
-            ball.dy = ball.dx if by > py else ball.dx * -1
+            ball.dy = ball.dx if by < py else ball.dx * -1
         elif abs(by - py) < 30:
-            ball.dy = ball.dx + 0.8 if by > py else (ball.dx + 0.8) * -1
+            ball.dy = ball.dx - 0.8 if by < py else (ball.dx + 0.8) * -1
         elif abs(by - py) < 40:
-            ball.dy = ball.dx + 0.4 if by > py else (ball.dx + 0.4) * -1
+            ball.dy = ball.dx - 0.4 if by < py else (ball.dx + 0.4) * -1
         else:
-            ball.dy = ball.dx + 0.2 if by > py else (ball.dx + 0.2) * -1
+            ball.dy = ball.dx - 0.2 if by < py else (ball.dx + 0.2) * -1
         os.system("aplay bounce.wav&")
 
     if bx - 10 >= px + 10 and bx + 10 <= px - 10 and (by - 10 <= py + 50 or by + 10 >= py - 50):
@@ -163,22 +148,6 @@ def update_score():
     ball.goto(0,0)
     ball.dx *= -1
     ball.dy *= -1
-
-def reset():
-    global hasWinner
-    if hasWinner:
-        ball.goto(0, 0)
-        paddle_1.goto(-350, 0)
-        paddle_2.goto(350, 0)
-        ball.dx = 1
-        ball.dy = 1
-        hasWinner = not hasWinner
-
- # Mensagem final se um dos jogadores conseguir 5 pontos   
- # ainda tem que ajeitar pq tá uma merda
-def winner_hud(winner):
-    win_hud = create_hud()
-    win_hud.goto(0, 0)
 
 # verificacao de parametros e error_showcase
 parameters = argv[1:]
@@ -236,53 +205,49 @@ if (num_players == 1):
     screen.onkeypress(paddle_1_up, "w")
     screen.onkeypress(paddle_1_down, "s")
 
-screen.onkeypress(reset, "Return")
-
 while playing:
-    if not hasWinner: 
-        # Colisão da raquete 1
-        collision_1(paddle_1, ball)
+    # Colisão da raquete 1
+    collision_1(paddle_1, ball)
 
-        # Colisão da raquete 2
-        collision_2(paddle_2, ball)
+    # Colisão da raquete 2
+    collision_2(paddle_2, ball)
 
-        hud.clear()
-        hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal"))
+    hud.clear()
+    hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal"))
 
-        # movimentacao da bola
-        ball.setx(ball.xcor() + ball.dx)
-        ball.sety(ball.ycor() + ball.dy)
+    # movimentacao da bola
+    ball.setx(ball.xcor() + ball.dx)
+    ball.sety(ball.ycor() + ball.dy)
 
-        # movimentacao da raquete 2 em 1 Player
-        if (num_players == 1):
-            y = ball.ycor()
-            if y > 240:
-                y = 240
-            elif y < -240:
-                y = -240
-            paddle_2.sety(y)
+    # movimentacao da raquete 2 em 1 Player
+    if (num_players == 1):
+        y = ball.ycor()
+        if y > 240:
+            y = 240
+        elif y < -240:
+            y = -240
+        paddle_2.sety(y)
 
-        # colisao com parede superior
-        collider_walls(ball, north_wall)
-        
-        # colisao com parede inferior
-        collider_walls(ball, south_wall)
+    # colisao com parede superior
+    collider_walls(ball, north_wall)
+    
+    # colisao com parede inferior
+    collider_walls(ball, south_wall)
 
-        # colisao com parede esquerda
-        if ball.xcor() < left_wall.xcor():
-            right_player_score += 1
-            update_score()
-            ball.dx = 1
-            ball.dy = 1
-        
-        # colisao com parede direita
-        if ball.xcor() > right_wall.xcor():
-            left_player_score += 1
-            update_score()
+    # colisao com parede esquerda
+    if ball.xcor() < left_wall.xcor():
+        right_player_score += 1
+        update_score()
+        ball.dx = 1
+        ball.dy = 1
+    
+    # colisao com parede direita
+    if ball.xcor() > right_wall.xcor():
+        left_player_score += 1
+        update_score()
 
     # testa se um dos jogadores já conseguiu atingir 5 pontos
     if left_player_score == 5 or right_player_score == 5:
-        hasWinner = True
         winner = "Player 1" if left_player_score == 5 else "Player 2"
         winner_hud = create_hud()
         winner_hud.goto(0, 0)
