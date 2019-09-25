@@ -231,7 +231,12 @@ while playing:
 
     # movimentacao da raquete 2 em 1 Player
     if (num_players == 1):
-        paddle_2.sety(ball.ycor())
+        y = ball.ycor()
+        if y > 240:
+            y = 240
+        elif y < -240:
+            y = -240
+        paddle_2.sety(y)
 
     # colisao com parede superior
     collider_walls(ball, north_wall)
