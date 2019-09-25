@@ -146,8 +146,25 @@ def collider_walls (t1, t2):
 def update_score():
     os.system("aplay 258020__kodack__arcade-bleep-sound.wav&")
     ball.goto(0,0)
-    ball.dx *= -1
-    ball.dy *= -1
+
+winner_hud = create_hud()
+winner_hud.goto(0, 0)
+
+hasWinner = False
+def reset():
+    global left_player_score
+    global right_player_score
+    global hasWinner
+    if hasWinner:
+        winner_hud.clear()
+        left_player_score = 0
+        right_player_score = 0
+        paddle_1.goto(-350, 0)
+        paddle_2.goto(350, 0)
+        ball.goto(0, 0)
+        ball.dx = 1
+        ball.dy = 1
+        hasWinner = False
 
 # verificacao de parametros e error_showcase
 parameters = argv[1:]
@@ -205,6 +222,8 @@ if (num_players == 1):
     screen.onkeypress(paddle_1_up, "w")
     screen.onkeypress(paddle_1_down, "s")
 
+screen.onkeypress(reset, "Return")
+
 while playing:
     # Colisão da raquete 1
     collision_1(paddle_1, ball)
@@ -216,8 +235,9 @@ while playing:
     hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal"))
 
     # movimentacao da bola
-    ball.setx(ball.xcor() + ball.dx)
-    ball.sety(ball.ycor() + ball.dy)
+    if not hasWinner:
+        ball.setx(ball.xcor() + ball.dx)
+        ball.sety(ball.ycor() + ball.dy)
 
     # movimentacao da raquete 2 em 1 Player
     if (num_players == 1):
@@ -245,12 +265,13 @@ while playing:
     if ball.xcor() > right_wall.xcor():
         left_player_score += 1
         update_score()
+        ball.dx = -1
+        ball.dy = -1
 
     # testa se um dos jogadores já conseguiu atingir 5 pontos
     if left_player_score == 5 or right_player_score == 5:
+        hasWinner = True
         winner = "Player 1" if left_player_score == 5 else "Player 2"
-        winner_hud = create_hud()
-        winner_hud.goto(0, 0)
-        winner_hud.write("{} is the winner! Press ENTER to restart".format(winner), align="center", font=("Press Start 2P",24,"normal"))
+        winner_hud.write("{} is the winner! Press ENTER to restart".format(winner), align="center", font=("Press Start 2P",16,"normal"))
 
     screen.update()
