@@ -84,72 +84,31 @@ def paddle_2_down():
     if y - 20 > -250:
         y += -20
     paddle_2.sety(y)
-    
-# 20 pixels por unidade
-# paddle 1 x -360,-340
 
 def collision(paddle, ball):
     px, py = paddle.xcor(), paddle.ycor()
     bx, by = ball.xcor(), ball.ycor()
 
     if by < py + 50 and by > py - 50 and (bx + 10 == px - 10 or bx - 10 == px + 10):
+        ball.dx += 0.5 if ball.dx > 0 else -0.5
         ball.dx *= -1
         if abs(by - py) < 10:
-            print("meio")
             ball.dy = 0
         elif abs(by - py) < 20:
-            ball.dy = 1 if by > py else -1
+            ball.dy = ball.dx if by > py else ball.dx * -1
         elif abs(by - py) < 30:
-            ball.dy = 0.8 if by > py else -0.8
+            ball.dy = ball.dx + 0.8 if by > py else (ball.dx + 0.8) * -1
         elif abs(by - py) < 40:
-            ball.dy = 0.4 if by > py else -0.4
+            ball.dy = ball.dx + 0.4 if by > py else (ball.dx + 0.4) * -1
         else:
-            ball.dy = 0.2 if by > py else -0.2
+            ball.dy = ball.dx + 0.2 if by > py else (ball.dx + 0.2) * -1
         os.system("aplay bounce.wav&")
 
     if bx < px + 10 and bx > px - 10 and (by + 10 == py - 50 or by - 10 == py + 50):
+        ball.dx += 0.2 if ball.dx > 0 else -0.2
         ball.dx *= -1
         ball.dy *= -1
         os.system("aplay bounce.wav&")
-
-'''
-def test_collision(paddle):
-    paddle_espessure = 20 if paddle.xcor() < 0 else -20 
-    # se a bola estiver entre a coordenada y, que fica no centro do paddle, +50 e - 50, e na mesma coordenada x, ela entra em contato com a lateral do paddle
-    if (ball.ycor() < (paddle.ycor() + 50)) and (ball.ycor() > (paddle.ycor() - 50) and (ball.xcor() == (paddle.xcor() + paddle_espessure))):
-        # parte superior
-        if(ball.ycor() >= (paddle.ycor() + 37.5)) and ( ball.ycor() < (paddle.ycor() + 50)) :
-            ball.dx *= -1
-        elif(ball.ycor() >= (paddle.ycor() + 25)) and ( ball.ycor() < (paddle.ycor() + 37.5)):
-            ball.dx *= -1
-        elif(ball.ycor() >= (paddle.ycor() + 12.5)) and ( ball.ycor() < (paddle.ycor() + 25)):
-            ball.dx *= -1
-        # meiota da cabeçota , to ligado que eu podia ter deixado só num else, mas assim tenho mais ctz que tá batendo ali sacou? 
-        elif(ball.ycor() >= paddle.ycor()) and ( ball.ycor() < (paddle.ycor() + 12.5)):
-            ball.dx *= -1
-        elif(ball.ycor() < paddle.ycor()) and ( ball.ycor() > (paddle.ycor() - 12.5)):
-            ball.dx *= -1
-        # parte inferior
-        elif(ball.ycor() <= (paddle.ycor() - 12.5)) and ( ball.ycor() > (paddle.ycor() - 25)):
-            ball.dx *= -1
-        elif(ball.ycor() <= (paddle.ycor() + 25)) and ( ball.ycor() > (paddle.ycor() - 37.5)):
-            ball.dx *= -1
-        elif(ball.ycor() <= (paddle.ycor() - 37.5)) and ( ball.ycor() > (paddle.ycor() - 50)):
-            ball.dx *= -1
-    # aqui eu ia testar os laterais, mas né, tá daquele jeito
-    elif ((ball.xcor()+10) >= 340) and ((ball.xcor()+10) <= 360) and ((ball.ycor() + 10) == paddle.ycor() + 50):
-        
-        ball.dx *= -1
-    elif ((ball.xcor()+10) >= 340) and ((ball.xcor()+10) <= 360) and ((ball.ycor() + 10) == paddle.ycor() - 50):
-        
-        ball.dx *= -1
-    elif ((ball.xcor()+10) <= -340) and ((ball.xcor()+10) >= -360) and ((ball.ycor() + 10) == paddle.ycor() - 50):
-        
-        ball.dx *= -1
-    elif ((ball.xcor()+10) <= -340) and ((ball.xcor()+10) >= -360) and ((ball.ycor() + 10) == paddle.ycor() + 50):
-        
-        ball.dx *= -1
-'''
     
 def collider_walls (t1, t2):
     if t2.ycor() > 295 and t1.ycor() + 15 > t2.ycor():
@@ -161,19 +120,25 @@ def collider_walls (t1, t2):
 
 # atualiza placar
 def update_score():
-    hud.clear()
-    hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal") )
     os.system("aplay 258020__kodack__arcade-bleep-sound.wav&")
     ball.goto(0,0)
     ball.dx *= -1
     ball.dy *= -1
 
+def reset():
+    ball.goto(0, 0)
+    paddle_1.goto(-350, 0)
+    paddle_2.goto(350, 0)
+    ball.dx = 1
+    ball.dy = 1
+
  # Mensagem final se um dos jogadores conseguir 5 pontos   
  # ainda tem que ajeitar pq tá uma merda
 def winner_hud(winner):
-    hud.goto(0,0)
-    hud.write("{} is the winner!".format(winner), align="center", font=("Press Start 2P",40,"normal"))
-    sleep(5)
+    win_hud = create_hud()
+    win_hud.goto(0, 0)
+    win_hud.write("{} is the winner!".format(winner), align="center", font=("Press Start 2P",40,"normal"))
+    screen.onkeypress(reset, "Enter")
 
 # verificacao de parametros e error_showcase
 parameters = argv[1:]
@@ -217,26 +182,20 @@ left_player_score = 0
 right_player_score = 0
 
 hud = create_hud()
-hud2 = create_hud() #tava usando pra ajudar no debug e tal
 
 hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal") )
    
+screen.listen()
 # mapeando as teclas modo 2 Players
 if (num_players == 2):
-    screen.listen()
     screen.onkeypress(paddle_1_up, "w")
     screen.onkeypress(paddle_1_down, "s")
     screen.onkeypress(paddle_2_up, "Up")
     screen.onkeypress(paddle_2_down, "Down")
 
 if (num_players == 1):
-    screen.listen()
     screen.onkeypress(paddle_1_up, "w")
     screen.onkeypress(paddle_1_down, "s")
-
-cima = create_hud() # isso eu usei pra medir as raquetes
-
-hud2.goto(0,0) #o aux de debug indo pro meio da tela
 
 while playing:
     # Colisão da raquete 1
@@ -245,12 +204,8 @@ while playing:
     # Colisão da raquete 2
     collision(paddle_2, ball)
 
-    hud2.clear()
-    hud2.write("{}".format(ball.xcor()), align="center", font=("Press Start 2P",24,"normal")) # agora tava usando pra mapear os valores de x quando dava bug na raquete
-    
-    cima.clear()
-    cima.write("{}".format("aqui"), align="center", font=("Press Start 2P",1,"normal") ) # assim que eu "medi" os pixels da raquete
-    cima.goto(-340,paddle_1.ycor()+50)
+    hud.clear()
+    hud.write("{} : {}".format(left_player_score, right_player_score), align="center", font=("Press Start 2P",24,"normal"))
 
     # movimentacao da bola
     ball.setx(ball.xcor() + ball.dx)
@@ -287,6 +242,7 @@ while playing:
     if left_player_score == 5 or right_player_score == 5:
         winner = "Player 1" if left_player_score == 5 else "Player 2"
         winner_hud(winner)
-        close_screen()
-    
+        print("Foi")
+
     screen.update()
+    print("Foi 2")
