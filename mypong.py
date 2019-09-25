@@ -91,21 +91,22 @@ def collision_1(paddle, ball):
 
     if by - 10 <= py + 50 and by + 10 >= py - 50 and bx - 10 <= px + 10 and bx + 10 >= px - 10:
         ball.dx *= -1
-        ball.dx += 0.2 if ball.dx > 0 else -0.2
+        ball.dx += 0.05 if ball.dx > 0 else -0.05
         if abs(by - py) < 10:
             ball.dy = 0
         elif abs(by - py) < 20:
-            ball.dy = ball.dx if by > py else ball.dx * -1
+            ball.dy = 1 if by > py else -1
         elif abs(by - py) < 30:
-            ball.dy = ball.dx + 0.8 if by > py else (ball.dx + 0.8) * -1
+            ball.dy = 0.8 if by > py else -0.8
         elif abs(by - py) < 40:
-            ball.dy = ball.dx + 0.4 if by > py else (ball.dx + 0.4) * -1
+            ball.dy = 0.4 if by > py else -0.4
         else:
-            ball.dy = ball.dx + 0.2 if by > py else (ball.dx + 0.2) * -1
+            ball.dy = 0.2 if by > py else -0.2
         os.system("aplay bounce.wav&")
     
     if bx + 10 <= px - 10 and bx - 10 >= px + 10 and (by - 10 <= py + 50 or by + 10 >= py - 50):
         ball.dx *= -1
+        ball.dx += 0.05 if ball.dx > 0 else -0.05
         ball.dy *= -1
         os.system("aplay bounce.wav&")
 
@@ -116,21 +117,22 @@ def collision_2(paddle, ball):
 
     if by - 10 <= py + 50 and by + 10 >= py - 50 and bx + 10 >= px - 10 and bx - 10 <= px + 10:
         ball.dx *= -1
-        ball.dx += 0.2 if ball.dx > 0 else -0.2
+        ball.dx += 0.05 if ball.dx > 0 else -0.05
         if abs(by - py) < 10:
             ball.dy = 0
         elif abs(by - py) < 20:
-            ball.dy = ball.dx if by < py else ball.dx * -1
+            ball.dy = 1 if by > py else -1
         elif abs(by - py) < 30:
-            ball.dy = ball.dx - 0.8 if by < py else (ball.dx + 0.8) * -1
+            ball.dy = 0.8 if by > py else -0.8
         elif abs(by - py) < 40:
-            ball.dy = ball.dx - 0.4 if by < py else (ball.dx + 0.4) * -1
+            ball.dy = 0.4 if by > py else -0.4
         else:
-            ball.dy = ball.dx - 0.2 if by < py else (ball.dx + 0.2) * -1
+            ball.dy = 0.2 if by > py else -0.2
         os.system("aplay bounce.wav&")
 
     if bx - 10 >= px + 10 and bx + 10 <= px - 10 and (by - 10 <= py + 50 or by + 10 >= py - 50):
         ball.dx *= -1
+        ball.dx += 0.05 if ball.dx > 0 else -0.05
         ball.dy *= -1
         os.system("aplay bounce.wav&")
     
@@ -240,7 +242,7 @@ while playing:
         ball.sety(ball.ycor() + ball.dy)
 
     # movimentacao da raquete 2 em 1 Player
-    if (num_players == 1):
+    if num_players == 1:
         y = ball.ycor()
         if y > 240:
             y = 240
