@@ -46,8 +46,8 @@ def create_ball(x, y, color):
     ball.color(color)
     ball.penup()
     ball.goto(x, y)
-    ball.dx = 0.5
-    ball.dy = 0.5
+    ball.dx = 1
+    ball.dy = 1
     return ball
 
 def create_hud():
@@ -88,6 +88,31 @@ def paddle_2_down():
 # 20 pixels por unidade
 # paddle 1 x -360,-340
 
+def collision(paddle, ball):
+    px, py = paddle.xcor(), paddle.ycor()
+    bx, by = ball.xcor(), ball.ycor()
+
+    if by < py + 50 and by > py - 50 and (bx + 10 == px - 10 or bx - 10 == px + 10):
+        ball.dx *= -1
+        if abs(by - py) < 10:
+            print("meio")
+            ball.dy = 0
+        elif abs(by - py) < 20:
+            ball.dy = 1 if by > py else -1
+        elif abs(by - py) < 30:
+            ball.dy = 0.8 if by > py else -0.8
+        elif abs(by - py) < 40:
+            ball.dy = 0.4 if by > py else -0.4
+        else:
+            ball.dy = 0.2 if by > py else -0.2
+        os.system("aplay bounce.wav&")
+
+    if bx < px + 10 and bx > px - 10 and (by + 10 == py - 50 or by - 10 == py + 50):
+        ball.dx *= -1
+        ball.dy *= -1
+        os.system("aplay bounce.wav&")
+
+'''
 def test_collision(paddle):
     paddle_espessure = 20 if paddle.xcor() < 0 else -20 
     # se a bola estiver entre a coordenada y, que fica no centro do paddle, +50 e - 50, e na mesma coordenada x, ela entra em contato com a lateral do paddle
@@ -124,8 +149,9 @@ def test_collision(paddle):
     elif ((ball.xcor()+10) <= -340) and ((ball.xcor()+10) >= -360) and ((ball.ycor() + 10) == paddle.ycor() + 50):
         
         ball.dx *= -1
+'''
     
-def collider_walls (t1,t2):
+def collider_walls (t1, t2):
     if t2.ycor() > 295 and t1.ycor() + 15 > t2.ycor():
         os.system("aplay bounce.wav&")
         t1.dy *= -1
@@ -213,10 +239,11 @@ cima = create_hud() # isso eu usei pra medir as raquetes
 hud2.goto(0,0) #o aux de debug indo pro meio da tela
 
 while playing:
-    # colisao com raquete 1
-    test_collision(paddle_1)
-    # colisao com raquete 2
-    test_collision(paddle_2)
+    # Colisão da raquete 1
+    collision(paddle_1, ball)
+
+    # Colisão da raquete 2
+    collision(paddle_2, ball)
 
     hud2.clear()
     hud2.write("{}".format(ball.xcor()), align="center", font=("Press Start 2P",24,"normal")) # agora tava usando pra mapear os valores de x quando dava bug na raquete
@@ -248,6 +275,8 @@ while playing:
     if ball.xcor() < left_wall.xcor():
         right_player_score += 1
         update_score()
+        ball.dx = 1
+        ball.dy = 1
     
     # colisao com parede direita
     if ball.xcor() > right_wall.xcor():
