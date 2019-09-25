@@ -64,6 +64,7 @@ def create_hud():
 parameters = argv[1:]
 number_of_parameters = len(parameters)
 num_players = 2
+
 if number_of_parameters == 1:
     arg = ""
     try:
@@ -172,6 +173,7 @@ def update_score():
  # Mensagem final se um dos jogadores conseguir 5 pontos   
  # ainda tem que ajeitar pq tá uma merda
 def winner_hud(winner):
+    hud.goto(0,0)
     hud.write("{} is the winner!".format(winner), align="center", font=("Press Start 2P",40,"normal"))
     sleep(5)
    
